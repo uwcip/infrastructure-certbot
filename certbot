@@ -1,0 +1,4 @@
+#!/bin/sh
+
+. /opt/certbot/bin/activate
+exec /opt/certbot/bin/certbot "$@"
