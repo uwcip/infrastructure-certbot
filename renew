@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# try renewing every four hours
+exec /usr/bin/tini -- bash -c "trap exit TERM; while :; do /usr/local/bin/certbot renew; sleep 4h & wait ${!}; done;"

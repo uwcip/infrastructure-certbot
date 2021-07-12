@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+
+import json
+import os
+import requests
+import sys
+
+
+# URL to acme-dns instance
+API_URL = "http://localhost:5380"
+
+# path for acme-dns credential storage
+CREDENTIALS_PATH = "/etc/letsencrypt/acme-dns-registration.json"
+
+# DO NOT EDIT BELOW HERE
+
+DOMAIN = os.environ["CERTBOT_DOMAIN"]
+if DOMAIN.startswith("*."):
+    DOMAIN = DOMAIN[2:]
+
+VALIDATION_TOKEN = os.environ["CERTBOT_VALIDATION"]
+
+
+class Client(object):
+    """
+    Handles the communication with ACME-DNS API
+    """
+
+    def __init__(self, api_url):
+        self.api_url = api_url
+
+    def update_txt_record(self, account, txt):
+        """Updates the TXT challenge record to ACME-DNS subdomain."""
+        update = {
+            "subdomain": account["subdomain"],
+            "txt": txt,
+        }
+        headers = {
+            "X-Api-User": account["username"],
+            "X-Api-Key": account["password"],
+            "Content-Type": "application/json",
+        }
+        res = requests.post(
+            "{}/update".format(self.api_url),
+            headers=headers,
+            data=json.dumps(update),
+        )
+
+        if res.status_code != 200:
+            msg = ("Encountered an error while trying to update TXT record:\n"
+                   "------- Request headers:\n{}\n"
+                   "------- Request body:\n{}\n"
+                   "------- Response HTTP status: {}\n"
+                   "------- Response body: {}")
+            s_headers = json.dumps(headers, indent=2, sort_keys=True)
+            s_update = json.dumps(update, indent=2, sort_keys=True)
+            s_body = json.dumps(res.json(), indent=2, sort_keys=True)
+            print(msg.format(s_headers, s_update, res.status_code, s_body))
+            sys.exit(1)
+
+
+class Credentials(object):
+    def __init__(self, storage_path):
+        self.storage_path = storage_path
+        self._data = self.load()
+
+    def load(self):
+        """Reads the storage content from the disk to a dict structure"""
+        data = dict()
+        file_data = ""
+
+        try:
+            with open(self.storage_path, "r") as fh:
+                file_data = fh.read()
+        except IOError as e:
+            print("ERROR: credentials data file exists but cannot be read")
+            sys.exit(1)
+
+        try:
+            data = json.loads(file_data)
+        except ValueError:
+            if len(file_data) > 0:
+                # credentials file is corrupted
+                print("ERROR: credentials data file is corrupted")
+                sys.exit(1)
+
+        return data
+
+    def fetch(self, key):
+        """Gets configuration value from storage"""
+        try:
+            return self._data[key]
+        except KeyError:
+            return None
+
+
+if __name__ == "__main__":
+    client = Client(API_URL)
+    storage = Credentials(CREDENTIALS_PATH)
+
+    # Check if an account already exists in storage
+    print("fetching credentials for {}".format(DOMAIN))
+    account = storage.fetch(DOMAIN)
+    if account is None:
+        print("ERROR: no credentials found for {}".format(DOMAIN))
+        sys.exit(1)
+
+    # Update the TXT record in acme-dns instance
+    client.update_txt_record(account, VALIDATION_TOKEN)
