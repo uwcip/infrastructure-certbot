@@ -89,3 +89,14 @@ Therefore, to set up a new domain you can call it like this:
 After running the `certonly` command be sure to any any post hooks that you
 have that are necessary for distributing the new certificates to, for example,
 your load balancers.
+
+## Internal Notes
+
+Internal to CIP, this is how we create certificates:
+
+    POD=$(kubectl get pods -n support -l service=certbot -o jsonpath="{.items[0].metadata.name}")
+    kubectl exec -it -c certbot -n support $POD -- certbot certonly --email ciptools@uw.edu \
+        --no-eff-email --manual --manual-auth-hook /usr/local/bin/acme-dns --preferred-challenge dns \
+        -d "example.edu,*.example.edu"
+    kubectl exec -it -c certbot -n support $POD -- /etc/letsencrypt/renewal-hooks/post/update-load-balancers
+
