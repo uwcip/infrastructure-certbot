@@ -1,4 +1,4 @@
-FROM python:3.9.6-slim-buster@sha256:2c018e29a8eada75e855d78641adda978a2c0a035fd928e281e1240144e8a337 AS base
+FROM python:3.9.6-slim-buster@sha256:5f8d3734d4b4016391ebc0162526b8335f2c16acc423d8424c1582c73a8bb053 AS base
 
 # github metadata
 LABEL org.opencontainers.image.source=https://github.com/uwcip/infrastructure-certbot
