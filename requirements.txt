@@ -5,7 +5,7 @@ certbot==1.17.0
 acme==1.17.0
 certifi==2021.5.30
 cffi==1.14.6
-charset-normalizer==2.0.3
+charset-normalizer==2.0.4
 ConfigArgParse==1.5.1
 configobj==5.0.6
 cryptography==3.4.7
