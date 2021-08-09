@@ -1,5 +1,5 @@
 # direct dependencies
-certbot==1.17.0
+certbot==1.18.0
 
 # transitive dependencies
 acme==1.17.0
