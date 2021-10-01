@@ -8,7 +8,7 @@ cffi==1.14.6
 charset-normalizer==2.0.4
 ConfigArgParse==1.5.2
 configobj==5.0.6
-cryptography==3.4.8
+cryptography==35.0.0
 distro==1.6.0
 idna==3.2
 josepy==1.8.0
