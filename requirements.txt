@@ -4,13 +4,13 @@ certbot==1.20.0
 # transitive dependencies
 acme==1.20.0
 certifi==2021.10.8
-cffi==1.14.6
+cffi==1.15.0
 charset-normalizer==2.0.7
 ConfigArgParse==1.5.3
 configobj==5.0.6
 cryptography==35.0.0
 distro==1.6.0
-idna==3.2
+idna==3.3
 josepy==1.10.0
 parsedatetime==2.6
 pycparser==2.20
