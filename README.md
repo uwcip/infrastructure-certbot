@@ -20,8 +20,8 @@ have a volume with your certificates on it, you can use the certbot client by
 `exec`ing into the container and telling it to create new certificates, like
 this:
 
-    POD=$(kubectl get pods -n support -l service=certbot -o jsonpath="{.items[0].metadata.name}")
-    kubectl exec -it -c certbot -n support $POD -- certbot ...
+    POD=$(kubectl get pods -n tools -l service=certbot -o jsonpath="{.items[0].metadata.name}")
+    kubectl exec -it -c certbot -n tools $POD -- certbot ...
 
 Obviously, replace the `...` with the command that you wish to send to the
 certbot program. And maybe not so obviously be sure to set the correct
@@ -81,8 +81,8 @@ create a new certificate.
 
 Therefore, to set up a new domain you can call it like this:
 
-    POD=$(kubectl get pods -n support -l service=certbot -o jsonpath="{.items[0].metadata.name}")
-    kubectl exec -it -c certbot -n support $POD -- certbot certonly --emailnoreply@example.com \
+    POD=$(kubectl get pods -n tools -l service=certbot -o jsonpath="{.items[0].metadata.name}")
+    kubectl exec -it -c certbot -n tools $POD -- certbot certonly --emailnoreply@example.com \
         --no-eff-email --manual --manual-auth-hook /usr/local/bin/acme-dns --preferred-challenge dns \
         -d "example.com,*.example.com"
 
@@ -94,9 +94,9 @@ your load balancers.
 
 Internal to CIP, this is how we create certificates:
 
-    POD=$(kubectl get pods -n support -l service=certbot -o jsonpath="{.items[0].metadata.name}")
-    kubectl exec -it -c certbot -n support $POD -- certbot certonly --email ciptools@uw.edu \
+    POD=$(kubectl get pods -n tools -l service=certbot -o jsonpath="{.items[0].metadata.name}")
+    kubectl exec -it -c certbot -n tools $POD -- certbot certonly --email ciptools@uw.edu \
         --no-eff-email --manual --manual-auth-hook /usr/local/bin/acme-dns --preferred-challenge dns \
         -d "example.edu,*.example.edu"
-    kubectl exec -it -c certbot -n support $POD -- /etc/letsencrypt/renewal-hooks/post/update-load-balancers
+    kubectl exec -it -c certbot -n tools $POD -- /etc/letsencrypt/renewal-hooks/post/update-load-balancers
 
