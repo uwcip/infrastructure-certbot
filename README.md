@@ -82,7 +82,7 @@ create a new certificate.
 Therefore, to set up a new domain you can call it like this:
 
     POD=$(kubectl get pods -n tools -l service=certbot -o jsonpath="{.items[0].metadata.name}")
-    kubectl exec -it -c certbot -n tools $POD -- certbot certonly --emailnoreply@example.com \
+    kubectl exec -it -c certbot -n tools $POD -- certbot certonly --email noreply@example.com \
         --no-eff-email --manual --manual-auth-hook /usr/local/bin/acme-dns --preferred-challenge dns \
         -d "example.com,*.example.com"
 
