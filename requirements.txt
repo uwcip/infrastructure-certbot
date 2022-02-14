@@ -1,11 +1,11 @@
 # direct dependencies
-certbot==1.22.0
+certbot==1.23.0
 
 # transitive dependencies
-acme==1.22.0
+acme==1.23.0
 certifi==2021.10.8
 cffi==1.15.0
-charset-normalizer==2.0.11
+charset-normalizer==2.0.12
 ConfigArgParse==1.5.3
 configobj==5.0.6
 cryptography==36.0.1
